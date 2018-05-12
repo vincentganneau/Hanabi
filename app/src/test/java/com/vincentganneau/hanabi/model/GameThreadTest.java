@@ -29,9 +29,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.clearInvocations;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -46,13 +44,12 @@ public abstract class GameThreadTest {
     @Mock
     protected GameEngine mGameEngine;
 
-    // Update thread
-    protected UpdateThread mUpdateThread;
+    // Game thread
+    protected GameThread mGameThread;
 
     @Before
     public void setUp() throws InterruptedException {
         MockitoAnnotations.initMocks(this);
-        mUpdateThread = spy(new UpdateThread(mGameEngine));
     }
 
     /**
@@ -71,12 +68,12 @@ public abstract class GameThreadTest {
     @Test
     public void testStartGame() {
         // When
-        mUpdateThread.startGame();
+        mGameThread.startGame();
 
         // Then
-        assertTrue(mUpdateThread.mGameRunning);
-        assertFalse(mUpdateThread.mGamePaused);
-        verify(mUpdateThread).start();
+        assertTrue(mGameThread.mGameRunning);
+        assertFalse(mGameThread.mGamePaused);
+        verify(mGameThread).start();
     }
 
     /**
@@ -85,10 +82,10 @@ public abstract class GameThreadTest {
     @Test
     public void testResumeUnpausedGame() {
         // When
-        mUpdateThread.resumeGame();
+        mGameThread.resumeGame();
 
         // Then
-        verify(mUpdateThread, never()).notifyGamePausedLock();
+        verify(mGameThread, never()).notifyGamePausedLock();
     }
 
     /**
@@ -97,14 +94,14 @@ public abstract class GameThreadTest {
     @Test
     public void testResumePausedGame() {
         // Given
-        mUpdateThread.mGamePaused = true;
+        mGameThread.mGamePaused = true;
 
         // When
-        mUpdateThread.resumeGame();
+        mGameThread.resumeGame();
 
         // Then
-        assertFalse(mUpdateThread.mGamePaused);
-        verify(mUpdateThread).notifyGamePausedLock();
+        assertFalse(mGameThread.mGamePaused);
+        verify(mGameThread).notifyGamePausedLock();
     }
 
     /**
@@ -113,10 +110,10 @@ public abstract class GameThreadTest {
     @Test
     public void testPauseGame() {
         // When
-        mUpdateThread.pauseGame();
+        mGameThread.pauseGame();
 
         // Then
-        assertTrue(mUpdateThread.mGamePaused);
+        assertTrue(mGameThread.mGamePaused);
     }
 
     /**
@@ -125,14 +122,14 @@ public abstract class GameThreadTest {
     @Test
     public void testStopGame() {
         // Given
-        mUpdateThread.mGameRunning = true;
+        mGameThread.mGameRunning = true;
 
         // When
-        mUpdateThread.stopGame();
+        mGameThread.stopGame();
 
         // Then
-        assertFalse(mUpdateThread.mGameRunning);
-        verify(mUpdateThread).resumeGame();
+        assertFalse(mGameThread.mGameRunning);
+        verify(mGameThread).resumeGame();
     }
 
     /**
@@ -141,10 +138,10 @@ public abstract class GameThreadTest {
     @Test
     public void testNonRunningGame() {
         // When
-        mUpdateThread.start();
+        mGameThread.start();
 
         // Then
-        verify(mUpdateThread, never()).update(anyLong());
+        verify(mGameThread, never()).update(anyLong());
         verifyNeverUpdate();
     }
 
@@ -154,24 +151,24 @@ public abstract class GameThreadTest {
     @Test
     public void testRunningGame() throws InterruptedException {
         // When
-        mUpdateThread.startGame();
+        mGameThread.startGame();
         Thread.sleep(20);
 
         // Then
-        verify(mUpdateThread, atLeastOnce()).update(anyLong());
+        verify(mGameThread, atLeastOnce()).update(anyLong());
         verifyAtLeastOnceUpdate();
 
         // When
-        mUpdateThread.pauseGame();
+        mGameThread.pauseGame();
         Thread.sleep(20);
         clearInvocations(mGameEngine);
 
         // Then
         verifyNeverUpdate();
-        verify(mUpdateThread, atLeastOnce()).waitGamePausedLock();
+        verify(mGameThread, atLeastOnce()).waitGamePausedLock();
 
         // When
-        mUpdateThread.resumeGame();
+        mGameThread.resumeGame();
         Thread.sleep(20);
         clearInvocations(mGameEngine);
 
@@ -179,23 +176,22 @@ public abstract class GameThreadTest {
         verifyAtLeastOnceUpdate();
 
         // When
-        doThrow(new InterruptedException()).when(mUpdateThread).waitGamePausedLock();
-        mUpdateThread.pauseGame();
+        mGameThread.pauseGame();
         Thread.sleep(20);
         clearInvocations(mGameEngine);
 
         // Then
         verifyNeverUpdate();
-        verify(mUpdateThread, atLeastOnce()).waitGamePausedLock();
+        verify(mGameThread, atLeastOnce()).waitGamePausedLock();
 
         // When
-        mUpdateThread.stopGame();
+        mGameThread.stopGame();
         Thread.sleep(20);
         clearInvocations(mGameEngine);
-        clearInvocations(mUpdateThread);
+        clearInvocations(mGameThread);
 
         // Then
         verifyNoMoreInteractions(mGameEngine);
-        verifyNoMoreInteractions(mUpdateThread);
+        verifyNoMoreInteractions(mGameThread);
     }
 }

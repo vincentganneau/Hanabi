@@ -20,32 +20,33 @@ package com.vincentganneau.hanabi.model;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 /**
- * Tests the {@link UpdateThread} class.
+ * Tests the {@link DrawThread} class.
  * @author Vincent Ganneau
  */
 @RunWith(JUnit4.class)
-public class UpdateThreadTest extends GameThreadTest {
+public class DrawThreadTest extends GameThreadTest {
 
     @Override
     public void setUp() throws InterruptedException {
         super.setUp();
-        mGameThread = spy(new UpdateThread(mGameEngine));
+        final DrawThread drawThread = new DrawThread(mGameEngine, 60);
+        drawThread.mMinElapsedMillis = -1;
+        mGameThread = spy(drawThread);
     }
 
     @Override
     protected void verifyNeverUpdate() {
-        verify(mGameEngine, never()).updateGame(anyLong());
+        verify(mGameEngine, never()).drawGame();
     }
 
     @Override
     protected void verifyAtLeastOnceUpdate() {
-        verify(mGameEngine, atLeastOnce()).updateGame(anyLong());
+        verify(mGameEngine, atLeastOnce()).drawGame();
     }
 }

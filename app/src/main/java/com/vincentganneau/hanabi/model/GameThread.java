@@ -82,7 +82,7 @@ public abstract class GameThread extends Thread {
                     try {
                         waitGamePausedLock();
                     } catch (InterruptedException e) {
-                        // Stay on the loop
+                        // Stay on the loop.
                     }
                 }
                 currentTimeMillis = System.currentTimeMillis();
