@@ -17,35 +17,11 @@
 
 package com.vincentganneau.hanabi.model;
 
-import android.support.annotation.VisibleForTesting;
-
 /**
- * {@link Thread} subclass that continuously runs updates on the game engine.
+ * {@link GameThread} subclass that continuously runs updates on the game engine.
  * @author Vincent Ganneau
  */
-public class UpdateThread extends Thread {
-
-    // Dependencies
-    /**
-     * The game engine.
-     */
-    private final GameEngine mGameEngine;
-
-    // States
-    /**
-     * Indicates whether the game is running.
-     */
-    public volatile boolean mGameRunning;
-    /**
-     * Indicates whether the game is paused.
-     */
-    public volatile boolean mGamePaused;
-
-    // Lock
-    /**
-     * The lock for the thread to wait until the game is resumed.
-     */
-    Object mGamePausedLock = new Object();
+public class UpdateThread extends GameThread {
 
     // Constructor
     /**
@@ -53,95 +29,13 @@ public class UpdateThread extends Thread {
      * @param gameEngine the {@link GameEngine} instance.
      */
     public UpdateThread(GameEngine gameEngine) {
-        super();
-        mGameEngine = gameEngine;
+        super(gameEngine);
     }
 
+    // Game loop
     @Override
-    public void run() {
-        long previousTimeMillis = System.currentTimeMillis();
-        long currentTimeMillis;
-        long elapsedMillis;
-        while (mGameRunning) {
-            // Get the current time
-            currentTimeMillis = System.currentTimeMillis();
-
-            // Calculate the elapsed milliseconds since the previous run
-            elapsedMillis = currentTimeMillis - previousTimeMillis;
-
-            // Handle pause
-            if (mGamePaused) {
-                while (mGamePaused) {
-                    try {
-                        waitGamePausedLock();
-                    } catch (InterruptedException e) {
-                        // Stay on the loop
-                    }
-                }
-                currentTimeMillis = System.currentTimeMillis();
-            }
-
-            // Update the game
-            mGameEngine.updateGame(elapsedMillis);
-
-            // Store the current time
-            previousTimeMillis = currentTimeMillis;
-        }
-    }
-
-    // Lifecycle methods
-    /**
-     * Starts the game.
-     */
-    public void startGame() {
-        mGameRunning = true;
-        mGamePaused = false;
-        start();
-    }
-
-    /**
-     * Resumes the game.
-     */
-    public void resumeGame() {
-        if (mGamePaused) {
-            mGamePaused = false;
-            notifyGamePausedLock();
-        }
-    }
-
-    /**
-     * Pauses the game.
-     */
-    public void pauseGame() {
-        mGamePaused = true;
-    }
-
-    /**
-     * Stops the game.
-     */
-    public void stopGame() {
-        mGameRunning = false;
-        resumeGame();
-    }
-
-    // Lock methods
-    /**
-     * Calls {@link Object#wait()} on the lock.
-     */
-    @VisibleForTesting
-    public void waitGamePausedLock() throws InterruptedException {
-        synchronized (mGamePausedLock) {
-            mGamePausedLock.wait();
-        }
-    }
-
-    /**
-     * Calls {@link Object#notify()} on the lock.
-     */
-    @VisibleForTesting
-    public void notifyGamePausedLock() {
-        synchronized (mGamePausedLock) {
-            mGamePausedLock.notify();
-        }
+    public void update(long elapsedMillis) {
+        // Update the game
+        mGameEngine.updateGame(elapsedMillis);
     }
 }
