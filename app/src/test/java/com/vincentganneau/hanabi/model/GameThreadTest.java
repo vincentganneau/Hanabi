@@ -69,6 +69,8 @@ public abstract class GameThreadTest {
     @Test
     public void testConstructor() {
         assertEquals(mGameEngine, mGameThread.mGameEngine);
+        assertFalse(mGameThread.mGameRunning);
+        assertFalse(mGameThread.mGamePaused);
     }
 
     /**
