@@ -24,6 +24,7 @@ import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -63,7 +64,15 @@ public abstract class GameThreadTest {
     protected abstract void verifyAtLeastOnceUpdate();
 
     /**
-     * Tests the {@link UpdateThread#startGame()} method.
+     * Tests the {@link GameThread} constructor.
+     */
+    @Test
+    public void testConstructor() {
+        assertEquals(mGameEngine, mGameThread.mGameEngine);
+    }
+
+    /**
+     * Tests the {@link GameThread#startGame()} method.
      */
     @Test
     public void testStartGame() {
@@ -77,7 +86,7 @@ public abstract class GameThreadTest {
     }
 
     /**
-     * Tests the {@link UpdateThread#resumeGame()} method when the game is not paused.
+     * Tests the {@link GameThread#resumeGame()} method when the game is not paused.
      */
     @Test
     public void testResumeUnpausedGame() {
@@ -89,7 +98,7 @@ public abstract class GameThreadTest {
     }
 
     /**
-     * Tests the {@link UpdateThread#resumeGame()} method when the game is paused.
+     * Tests the {@link GameThread#resumeGame()} method when the game is paused.
      */
     @Test
     public void testResumePausedGame() {
@@ -105,7 +114,7 @@ public abstract class GameThreadTest {
     }
 
     /**
-     * Tests the {@link UpdateThread#pauseGame()} method.
+     * Tests the {@link GameThread#pauseGame()} method.
      */
     @Test
     public void testPauseGame() {
@@ -117,7 +126,7 @@ public abstract class GameThreadTest {
     }
 
     /**
-     * Tests the {@link UpdateThread#stopGame()} method.
+     * Tests the {@link GameThread#stopGame()} method.
      */
     @Test
     public void testStopGame() {
@@ -133,7 +142,7 @@ public abstract class GameThreadTest {
     }
 
     /**
-     * Tests the {@link UpdateThread#run()} method when game has not been started.
+     * Tests the {@link GameThread#run()} method when game has not been started.
      */
     @Test
     public void testNonRunningGame() {
@@ -146,7 +155,7 @@ public abstract class GameThreadTest {
     }
 
     /**
-     * Tests the {@link UpdateThread#run()} method when game is started.
+     * Tests the {@link GameThread#run()} method when game is started.
      */
     @Test
     public void testRunningGame() throws InterruptedException {
@@ -171,6 +180,7 @@ public abstract class GameThreadTest {
         mGameThread.resumeGame();
         Thread.sleep(20);
         clearInvocations(mGameEngine);
+        Thread.sleep(20);
 
         // Then
         verifyAtLeastOnceUpdate();

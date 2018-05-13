@@ -17,4 +17,4 @@
 | ------------------------------------------------------------------------------------- | -----------------:| -------------:|
 | [GameThread](./app/src/main/java/com/vincentganneau/hanabi/model/GameThread.java)     | 100%              | 97%           |
 | [UpdateThread](./app/src/main/java/com/vincentganneau/hanabi/model/UpdateThread.java) | 100%              | 100%          |
-| [DrawThread](./app/src/main/java/com/vincentganneau/hanabi/model/DrawThread.java)     | 100%              | 66%           |
+| [DrawThread](./app/src/main/java/com/vincentganneau/hanabi/model/DrawThread.java)     | 100%              | 88%           |

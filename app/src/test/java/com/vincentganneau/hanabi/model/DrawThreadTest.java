@@ -20,6 +20,7 @@ package com.vincentganneau.hanabi.model;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
@@ -32,12 +33,14 @@ import static org.mockito.Mockito.verify;
 @RunWith(JUnit4.class)
 public class DrawThreadTest extends GameThreadTest {
 
+    // Draw thread
+    private DrawThread mDrawThread;
+
     @Override
     public void setUp() throws InterruptedException {
         super.setUp();
-        final DrawThread drawThread = new DrawThread(mGameEngine, 60);
-        drawThread.mMinElapsedMillis = -1;
-        mGameThread = spy(drawThread);
+        mDrawThread = new DrawThread(mGameEngine, 60);
+        mGameThread = spy(mDrawThread);
     }
 
     @Override
@@ -48,5 +51,17 @@ public class DrawThreadTest extends GameThreadTest {
     @Override
     protected void verifyAtLeastOnceUpdate() {
         verify(mGameEngine, atLeastOnce()).drawGame();
+    }
+
+    @Override
+    public void testConstructor() {
+        super.testConstructor();
+        assertEquals(1000 / 60, mDrawThread.mMinElapsedMillis);
+    }
+
+    @Override
+    public void testRunningGame() throws InterruptedException {
+        mDrawThread.mMinElapsedMillis = -1;
+        super.testRunningGame();
     }
 }
