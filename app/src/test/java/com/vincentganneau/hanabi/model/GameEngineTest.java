@@ -106,11 +106,12 @@ public class GameEngineTest {
 
         // When
         mGameEngine.updateGame(1000 / 60);
+        Thread.sleep(200);
 
         // Then
         assertEquals(2, mGameEngine.mGameObjects.size());
         assertTrue(mGameEngine.mGameObjectsToAdd.isEmpty());
-        verify(gameObject).onUpdate(1000 / 60, mGameEngine);
+        verify(gameObject, atLeastOnce()).onUpdate(1000 / 60, mGameEngine);
 
         // When
         doAnswer(invocation -> {
@@ -118,7 +119,7 @@ public class GameEngineTest {
             return null;
         }).when(mActivity).runOnUiThread(mGameEngine.mDrawRunnable);
         mGameEngine.drawGame();
-        Thread.sleep(20);
+        Thread.sleep(200);
 
         // Then
         verify(mActivity, atLeastOnce()).runOnUiThread(mGameEngine.mDrawRunnable);

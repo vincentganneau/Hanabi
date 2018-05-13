@@ -163,7 +163,7 @@ public abstract class GameThreadTest {
     public void testRunningGame() throws InterruptedException {
         // When
         mGameThread.startGame();
-        Thread.sleep(20);
+        Thread.sleep(200);
 
         // Then
         verify(mGameThread, atLeastOnce()).update(anyLong());
@@ -171,7 +171,7 @@ public abstract class GameThreadTest {
 
         // When
         mGameThread.pauseGame();
-        Thread.sleep(20);
+        Thread.sleep(200);
         clearInvocations(mGameEngine);
 
         // Then
@@ -180,16 +180,16 @@ public abstract class GameThreadTest {
 
         // When
         mGameThread.resumeGame();
-        Thread.sleep(20);
+        Thread.sleep(200);
         clearInvocations(mGameEngine);
-        Thread.sleep(20);
+        Thread.sleep(200);
 
         // Then
         verifyAtLeastOnceUpdate();
 
         // When
         mGameThread.pauseGame();
-        Thread.sleep(20);
+        Thread.sleep(200);
         clearInvocations(mGameEngine);
 
         // Then
@@ -198,7 +198,7 @@ public abstract class GameThreadTest {
 
         // When
         mGameThread.stopGame();
-        Thread.sleep(20);
+        Thread.sleep(200);
         clearInvocations(mGameEngine);
         clearInvocations(mGameThread);
 
