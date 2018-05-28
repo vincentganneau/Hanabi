@@ -16,6 +16,12 @@
   __________________________________________________________________________*/
 
 apply plugin: 'com.android.application'
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.8.1"
+}
+
 
 android {
     compileSdkVersion 27
