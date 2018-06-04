@@ -9,13 +9,21 @@
 - List all [Gradle](https://gradle.org/) dependencies here.
 
 ## Game Architecture
+
+### [Model](./app/src/main/java/com/vincentganneau/hanabi/model)
+- [GameScore](./app/src/main/java/com/vincentganneau/hanabi/model/GameScore.java)
 - [GameEngine](./app/src/main/java/com/vincentganneau/hanabi/model/GameEngine.java)
 - [UpdateThread](./app/src/main/java/com/vincentganneau/hanabi/model/UpdateThread.java)
 - [DrawThread](./app/src/main/java/com/vincentganneau/hanabi/model/DrawThread.java)
 
+### [User Interface](./app/src/main/java/com/vincentganneau/hanabi/ui)
+- [GameActivity](./app/src/main/java/com/vincentganneau/hanabi/ui/GameActivity.java)
+- [GameFragment](./app/src/main/java/com/vincentganneau/hanabi/ui/GameFragment.java)
+
 ## Code Coverage
 | Classes                                                                               | Methods covered   | Lines covered |
 | ------------------------------------------------------------------------------------- | -----------------:| -------------:|
+| [GameScore](./app/src/main/java/com/vincentganneau/hanabi/model/GameScore.java)       | 100%              | 100%          |
 | [GameEngine](./app/src/main/java/com/vincentganneau/hanabi/model/GameEngine.java)     | 100%              | 100%          |
 | [GameThread](./app/src/main/java/com/vincentganneau/hanabi/model/GameThread.java)     | 100%              | 97%           |
 | [UpdateThread](./app/src/main/java/com/vincentganneau/hanabi/model/UpdateThread.java) | 100%              | 100%          |
