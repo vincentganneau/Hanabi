@@ -98,6 +98,14 @@ public class GameEngine {
         return mUpdateThread != null && mUpdateThread.mGameRunning;
     }
 
+    /**
+     * Indicates whether the game is paused.
+     * @return <code>true</code> if the game is paused, <code>false</code> otherwise.
+     */
+    public boolean isGamePaused() {
+        return mUpdateThread != null && mUpdateThread.mGamePaused;
+    }
+
     // Game lifecycle
     /**
      * Starts the game.
@@ -119,6 +127,14 @@ public class GameEngine {
         // Start the drawing thread
         mDrawThread = new DrawThread(this, 60);
         mDrawThread.startGame();
+    }
+
+    /**
+     * Resumes the game.
+     */
+    public void resumeGame() {
+        mUpdateThread.resumeGame();
+        mDrawThread.resumeGame();
     }
 
     /**
@@ -148,6 +164,14 @@ public class GameEngine {
      */
     public void drawGame() {
         mActivity.runOnUiThread(mDrawRunnable);
+    }
+
+    /**
+     * Pauses the game.
+     */
+    public void pauseGame() {
+        mUpdateThread.pauseGame();
+        mDrawThread.pauseGame();
     }
 
     /**

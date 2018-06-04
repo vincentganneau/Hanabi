@@ -132,6 +132,18 @@ public class GameEngineTest {
         verify(mActivity).runOnUiThread(gameObject.mOnRemovedRunnable);
 
         // When
+        mGameEngine.pauseGame();
+
+        // Then
+        assertTrue(mGameEngine.isGamePaused());
+
+        // When
+        mGameEngine.resumeGame();
+
+        // Then
+        assertFalse(mGameEngine.isGamePaused());
+
+        // When
         mGameEngine.stopGame();
 
         // Then
