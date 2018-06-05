@@ -22,7 +22,6 @@ jacoco {
     toolVersion = "0.8.1"
 }
 
-
 android {
     compileSdkVersion 27
     buildToolsVersion "27.0.3"
@@ -67,7 +66,29 @@ dependencies {
 
     // Mockito
     testImplementation 'org.mockito:mockito-core:2.13.0'
+    androidTestImplementation 'org.mockito:mockito-android:2.7.22'
 
     // Espresso
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
+}
+
+task fullCoverageReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+
+    reports {
+        xml.enabled true
+        html.enabled true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.class',
+                      '**/Dagger*Component*.class', '**/*Module*.class']
+    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+    def mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: "$buildDir", includes: [
+            'jacoco/testDebugUnitTest.exec',
+            'outputs/code-coverage/connected/*coverage.ec'
+    ])
 }
